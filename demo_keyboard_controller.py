@@ -79,13 +79,13 @@ class RCController():
 
 def main():
     mp_driver = MPDriverInput()
-    controller = RCController()
+    # controller = RCController()
 
     print('Press esc to exit')
 
     while mp_driver.is_run.value:
-        controller.set_value(mp_driver.throttle.value, mode='throt')
-        controller.set_value(mp_driver.steering.value, mode='steer')
+        # controller.set_value(mp_driver.throttle.value, mode='throt')
+        # controller.set_value(mp_driver.steering.value, mode='steer')
 
         print('Throttle: {}, Steering: {}'.format(mp_driver.throttle.value, mp_driver.steering.value))
         sleep(0.01)
