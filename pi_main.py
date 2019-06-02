@@ -49,8 +49,8 @@ class RCController():
     def __init__(self, throttle_id=0, steering_id=1):
         self.throt = PWMThrottle(PCA9685(throttle_id))
         self.steer = PWMSteering(PCA9685(steering_id))
-        self.throt_test_rate = 0.3
-        self.steer_test_rate = 1.0
+        self.throt_limit = [-0.8, 0.3]
+        self.steer_limit = [-1.0, 1.0]
         self.throt_direction = -1
         self.steer_direction = -1
         return
@@ -58,14 +58,13 @@ class RCController():
     def set_value(self, value, mode='steer'):
         if mode == 'throt':
             controller = self.throt
-            rate = self.throt_test_rate
+            limit = self.throt_limit
             direction = self.throt_direction
         elif mode == 'steer':
             controller = self.steer
-            rate = self.steer_test_rate
+            limit = self.steer_limit
             direction = self.steer_direction    
-        value = value * rate
-        controller.run(value * direction)
+        controller.run(np.clip(value * direction, limit[0], limit[1]))
         return
 
     def shutdown(self):
