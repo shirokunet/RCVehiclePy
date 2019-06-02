@@ -49,7 +49,7 @@ class PWMSteering:
 
     def run(self, angle):
         # map absolute angle to angle that vehicle can implement.
-        pulse = map_range(
+        pulse = data.map_range(
             angle,
             self.LEFT_ANGLE, self.RIGHT_ANGLE,
             self.left_pulse, self.right_pulse
@@ -86,13 +86,13 @@ class PWMThrottle:
 
     def run(self, throttle):
         if throttle > 0:
-            pulse = map_range(throttle, \
-                              0, self.MAX_THROTTLE, \
-                              self.zero_pulse, self.max_pulse)
+            pulse = data.map_range(throttle, \
+                                   0, self.MAX_THROTTLE, \
+                                   self.zero_pulse, self.max_pulse)
         else:
-            pulse = map_range(throttle, \
-                              self.MIN_THROTTLE, 0, \
-                              self.min_pulse, self.zero_pulse)
+            pulse = data.map_range(throttle, \
+                                   self.MIN_THROTTLE, 0, \
+                                   self.min_pulse, self.zero_pulse)
 
         self.controller.set_pulse(pulse)
 
@@ -129,7 +129,7 @@ class Adafruit_DCMotor_Hat:
             raise ValueError("Speed must be between 1(forward) and -1(reverse)")
 
         self.speed = speed
-        self.throttle = int(map_range(abs(speed), -1, 1, -255, 255))
+        self.throttle = int(data.map_range(abs(speed), -1, 1, -255, 255))
 
         if speed > 0:
             self.motor.run(self.FORWARD)
