@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 """
 actuators.py
 Classes to control the motors and servos. These classes

@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 import paho.mqtt.client as mqtt
 
@@ -21,4 +22,3 @@ client.on_message = on_message
 client.connect(host, port, keepalive)
 
 client.loop_forever()
-

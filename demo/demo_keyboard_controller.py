@@ -1,9 +1,13 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 import ctypes
 from multiprocessing import Process, Value
 from pynput import keyboard
 from time import sleep
 
+import sys, os
+sys.path.append(os.path.join(os.path.dirname('__file__'), '..'))
 from parts.actuator import PCA9685, PWMSteering, PWMThrottle
 
 

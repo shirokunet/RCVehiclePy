@@ -1,5 +1,11 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import numpy as np
 import time
+
+import sys, os
+sys.path.append(os.path.join(os.path.dirname('__file__'), '..'))
 from parts.actuator import PCA9685, PWMSteering, PWMThrottle
 
 
