@@ -5,6 +5,9 @@ are wrapped in a mixer class before being used in the drive loop.
 """
 
 import time
+
+import sys, os
+sys.path.append(os.path.join(os.path.dirname('__file__'), '../'))
 from util import data
 
 
@@ -84,7 +87,7 @@ class PWMThrottle:
     def run(self, throttle):
         if throttle > 0:
             pulse = map_range(throttle,
-                                           0, self.MAX_THROTTLE,
+                              0, self.MAX_THROTTLE,
                                            self.zero_pulse, self.max_pulse)
         else:
             pulse = map_range(throttle,
