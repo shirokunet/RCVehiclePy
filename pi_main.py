@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+import json
 import paho.mqtt.client as mqtt
 
 
@@ -15,9 +16,8 @@ def main():
         client.subscribe(topic)
 
     def on_message(client, userdata, msg):
-        throttle_value = str(msg.payload).split(',')[0]
-        steerring_value = str(msg.payload).split(',')[1]
-        print(msg.topic, throttle_value, steerring_value)
+        driver_msg = json.loads(msg.payload)
+        print(msg.topic, driver_msg['throttle'], driver_msg['steering'])
 
     client = mqtt.Client()
     client.on_connect = on_connect

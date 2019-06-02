@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import ctypes
+import json
 import paho.mqtt.client as mqtt
 import time
 from multiprocessing import Process, Value
@@ -59,15 +60,20 @@ def main():
     client.connect(host, port, keepalive)
 
     mp_driver = MPDriverInput()
+    driver_msg = {
+        'throttle': 0.0,
+        'steering': 0.0
+    }
 
     print('Press esc to exit:')
 
     while mp_driver.is_run.value:
-        client.publish(topic, str(float(mp_driver.throttle.value)) \
-                            + ','+ str(float(mp_driver.steering.value)))
+        driver_msg['throttle'] = mp_driver.throttle.value
+        driver_msg['steering'] = mp_driver.steering.value
+        client.publish(topic, json.dumps(driver_msg))
 
-        print('Throttle: {}, Steering: {}'.format(mp_driver.throttle.value, \
-                                                  mp_driver.steering.value))
+        print('Throttle: {}, Steering: {}'.format(driver_msg['throttle'], \
+                                                  driver_msg['steering']))
         time.sleep(0.01)
 
     mp_driver.close()
