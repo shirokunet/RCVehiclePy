@@ -15,7 +15,7 @@ class MPDriverInput():
         self.steering = Value(ctypes.c_float,0.0)
         self.is_run = Value(ctypes.c_bool,True)
 
-        self._p = Process(target=self._process, args=(10,))
+        self._p = Process(target=self._process, args=())
         self._p.start()
         return
 
@@ -41,7 +41,7 @@ class MPDriverInput():
         elif key == keyboard.Key.left or key == keyboard.Key.right:
             self.steering.value = 0.0
 
-    def _process(self, num):
+    def _process(self):
         key_listener = keyboard.Listener(on_press=self._on_press, \
                                          on_release=self._on_release)
         key_listener.start()
