@@ -16,8 +16,8 @@ def main():
         client.subscribe(topic)
 
     def on_message(client, userdata, msg):
-        driver_msg = json.loads(msg.payload)
-        print(msg.topic, driver_msg['throttle'], driver_msg['steering'])
+        driver_msg = json.loads(msg.payload.decode('utf-8'))
+        print(msg.topic, driver_msg['throttle'])
 
     client = mqtt.Client()
     client.on_connect = on_connect
