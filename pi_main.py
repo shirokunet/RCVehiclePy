@@ -5,6 +5,7 @@ import ctypes
 import json
 import paho.mqtt.client as mqtt
 import time
+import numpy as np
 from multiprocessing import Process, Value
 from parts.actuator import PCA9685, PWMSteering, PWMThrottle
 
@@ -63,9 +64,10 @@ class RCController():
         elif mode == 'steer':
             controller = self.steer
             limit = self.steer_limit
-            direction = self.steer_direction    
-        controller.run(np.clip(value * direction, limit[0], limit[1]))
-        return
+            direction = self.steer_direction
+        output_value = np.clip(value, limit[0], limit[1])
+        controller.run(output_value * direction)
+        return output_value
 
     def shutdown(self):
         self.throt.shutdown()
@@ -78,10 +80,9 @@ def main():
     controller = RCController()
 
     while True:
-        controller.set_value(mp_receiver.throttle.value, mode='throt')
-        controller.set_value(mp_receiver.steering.value, mode='steer')
-        print('Throttle: {}, Steering: {}'.format(mp_receiver.throttle.value, \
-                mp_receiver.steering.value))
+        throttle_output = controller.set_value(mp_receiver.throttle.value, mode='throt')
+        steering_output = controller.set_value(mp_receiver.steering.value, mode='steer')
+        print('Throttle: {}, Steering: {}'.format(throttle_output, steering_output))
         time.sleep(0.01)
 
     controller.shutdown()
