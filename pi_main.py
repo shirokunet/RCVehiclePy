@@ -5,18 +5,23 @@ import ctypes
 import json
 import paho.mqtt.client as mqtt
 import time
+import yaml
 import numpy as np
 from multiprocessing import Process, Value
 from parts.actuator import PCA9685, PWMSteering, PWMThrottle
 
 
 class MPMQTTReceiver():
-    def __init__(self):
+    def __init__(self, host='10.0.0.88', port=1883, keepalive=60):
         self.throttle = Value(ctypes.c_float,0.0)
         self.steering = Value(ctypes.c_float,0.0)
         self.is_run = Value(ctypes.c_bool,True)
 
-        self._set_mqtt()
+        self._client = mqtt.Client()
+        self._client.on_connect = self._on_connect
+        self._client.on_message = self._on_message
+        self._client.connect(host, port, keepalive)
+
         self._p = Process(target=self._process, args=())
         self._p.start()
         return
@@ -24,12 +29,6 @@ class MPMQTTReceiver():
     def close(self):
         self.is_run.value = False
         self._p.join()
-
-    def _set_mqtt(self, host='10.0.0.88', port=1883, keepalive=60):
-        self._client = mqtt.Client()
-        self._client.on_connect = self._on_connect
-        self._client.on_message = self._on_message
-        self._client.connect(host, port, keepalive)
 
     def _on_connect(self, client, userdata, flags, rc, topic='mqtt/sensor'):
         self._client.subscribe(topic)
@@ -76,7 +75,11 @@ class RCController():
 
 
 def main():
-    mp_receiver = MPMQTTReceiver()
+    ymlfile = open('config.yml')
+    cfg = yaml.load(ymlfile)
+    ymlfile.close()
+
+    mp_receiver = MPMQTTReceiver(host=cfg['pi_ip'])
     controller = RCController()
 
     while True:
