@@ -83,7 +83,7 @@ def main():
     while mp_driver.is_run.value:
         driver_msg['throttle'] = mp_driver.throttle.value
         driver_msg['steering'] = mp_driver.steering.value
-        sender.publish(topic, json.dumps(driver_msg))
+        sender.publish(json.dumps(driver_msg))
         print('Throttle: {}, Steering: {}'.format(driver_msg['throttle'], driver_msg['steering']))
         time.sleep(0.01)
 
