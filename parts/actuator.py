@@ -86,13 +86,13 @@ class PWMThrottle:
 
     def run(self, throttle):
         if throttle > 0:
-            pulse = map_range(throttle,
-                              0, self.MAX_THROTTLE,
-                                           self.zero_pulse, self.max_pulse)
+            pulse = map_range(throttle, \
+                              0, self.MAX_THROTTLE, \
+                              self.zero_pulse, self.max_pulse)
         else:
-            pulse = map_range(throttle,
-                                           self.MIN_THROTTLE, 0,
-                                           self.min_pulse, self.zero_pulse)
+            pulse = map_range(throttle, \
+                              self.MIN_THROTTLE, 0, \
+                              self.min_pulse, self.zero_pulse)
 
         self.controller.set_pulse(pulse)
 
