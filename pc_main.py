@@ -71,7 +71,7 @@ def main():
     cfg = yaml.load(ymlfile)
     ymlfile.close()
 
-    sender = MQTTSender(host=cfg['pc_ip'])
+    sender = MQTTSender(host=cfg['pi_ip'])
     mp_driver = MPDriverInput()
 
     driver_msg = {
