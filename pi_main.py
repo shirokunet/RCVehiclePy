@@ -15,7 +15,7 @@ def main():
         client.subscribe(topic)
 
     def on_message(client, userdata, msg):
-        print(msg.topic + ' ' + str(msg.payload).split(','))
+        print(msg.topic, str(msg.payload).split(',')[0], str(msg.payload).split(',')[1])
 
     client = mqtt.Client()
     client.on_connect = on_connect
