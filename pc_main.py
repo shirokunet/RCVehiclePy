@@ -21,7 +21,7 @@ class MQTTSender():
         return
 
     def publish(self, driver_msg, topic='mqtt/sensor'):
-        self._client.publish(topic, json.dumps(driver_msg))
+        self._client.publish(topic, driver_msg)
         return
 
 
