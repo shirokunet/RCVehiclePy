@@ -1,12 +1,15 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+import ctypes
 import json
 import paho.mqtt.client as mqtt
+import time
 from multiprocessing import Process, Value
+from parts.actuator import PCA9685, PWMSteering, PWMThrottle
 
 
-def MPMQTTReceiver():
+class MPMQTTReceiver():
     def __init__(self):
         self.throttle = Value(ctypes.c_float,0.0)
         self.steering = Value(ctypes.c_float,0.0)
@@ -30,15 +33,16 @@ def MPMQTTReceiver():
     def _on_connect(self, client, userdata, flags, rc, topic='mqtt/sensor'):
         self._client.subscribe(topic)
 
-    def _on_message(client, userdata, msg):
+    def _on_message(self, client, userdata, msg):
         driver_msg = json.loads(msg.payload.decode('utf-8'))
         self.throttle.value = driver_msg['throttle']
         self.steering.value = driver_msg['steering']
 
     def _process(self):
+        self._client.loop_start()
         while self.is_run.value:
             time.sleep(0.01)
-        self._client.disconnect()
+        self._client.loop_stop()
 
 
 class RCController():
@@ -77,8 +81,9 @@ def main():
     while True:
         controller.set_value(mp_receiver.throttle.value, mode='throt')
         controller.set_value(mp_receiver.steering.value, mode='steer')
-        print('Throttle: {}, Steering: {}'.format(mp_receiver.throttle.value, mp_receiver.steering.value))
-        sleep(0.01)
+        print('Throttle: {}, Steering: {}'.format(mp_receiver.throttle.value, \
+                mp_receiver.steering.value))
+        time.sleep(0.01)
 
     controller.shutdown()
     mp_receiver.close()
