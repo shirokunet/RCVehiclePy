@@ -1,5 +1,5 @@
 # RCVehiclePy
-This is a Tool to Control steering and throttle of a R/C car using via MQTT with Raspberry Pi 3B.
+This is a Tool to Control steering and throttle of a R/C car via MQTT with Raspberry Pi 3B.
 
 [![demo_off_road](https://raw.githubusercontent.com/wiki/shirokunet/RCVehiclePy/images/off_road.gif)](https://www.youtube.com/watch?v=wb1s7gsLcVM)
 
