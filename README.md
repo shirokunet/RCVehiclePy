@@ -114,7 +114,7 @@ Type 'Ctrl' + 'c' in both terminals.
 The latency is about 100~300msec. It can be controlled easily even if you watch only the camera streaming.
 [![demo_flat_road](https://raw.githubusercontent.com/wiki/shirokunet/RCVehiclePy/images/flat_road.gif)](https://www.youtube.com/watch?v=Y4eQZay4Up8)
 
-[![camera_flat_road](https://raw.githubusercontent.com/wiki/shirokunet/RCVehiclePy/images/flat_road_cam.gif)](https://www.youtube.com/watch?v=wb1s7gsLcVM)
+[![camera_flat_road](https://raw.githubusercontent.com/wiki/shirokunet/RCVehiclePy/images/flat_road_cam.gif)](https://www.youtube.com/watch?v=Y4eQZay4Up8)
 
 
 ## Acknowledgments
