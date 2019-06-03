@@ -13,9 +13,10 @@ from parts.actuator import PCA9685, PWMSteering, PWMThrottle
 
 class MPMQTTReceiver():
     def __init__(self, host='10.0.0.88', port=1883, keepalive=60):
-        self.throttle = Value(ctypes.c_float,0.0)
-        self.steering = Value(ctypes.c_float,0.0)
-        self.is_run = Value(ctypes.c_bool,True)
+        self.time = Value(ctypes.c_int, 0)
+        self.throttle = Value(ctypes.c_float, 0.0)
+        self.steering = Value(ctypes.c_float, 0.0)
+        self.is_run = Value(ctypes.c_bool, True)
 
         self._client = mqtt.Client()
         self._client.on_connect = self._on_connect
@@ -35,6 +36,7 @@ class MPMQTTReceiver():
 
     def _on_message(self, client, userdata, msg):
         driver_msg = json.loads(msg.payload.decode('utf-8'))
+        self.time.value = driver_msg['time']
         self.throttle.value = driver_msg['throttle']
         self.steering.value = driver_msg['steering']
 
@@ -49,7 +51,7 @@ class RCController():
     def __init__(self, throttle_id=0, steering_id=1):
         self.throt = PWMThrottle(PCA9685(throttle_id))
         self.steer = PWMSteering(PCA9685(steering_id))
-        self.throt_limit = [-0.8, 0.3]
+        self.throt_limit = [-1.0, 1.0]
         self.steer_limit = [-1.0, 1.0]
         self.throt_direction = -1
         self.steer_direction = -1
@@ -82,10 +84,22 @@ def main():
     mp_receiver = MPMQTTReceiver(host=cfg['pi_ip'])
     controller = RCController()
 
+    #mp_receiver_z1 = 0
+
     while True:
-        throttle_output = controller.set_value(mp_receiver.throttle.value, mode='throt')
-        steering_output = controller.set_value(mp_receiver.steering.value, mode='steer')
-        print('Throttle: {}, Steering: {}'.format(throttle_output, steering_output))
+        throttle_value = mp_receiver.throttle.value
+        steering_value = mp_receiver.steering.value
+        
+        time_diff =  abs(mp_receiver.time.value - time.time())
+        if time_diff >= 2:
+            throttle_value = 0
+            steering_value = 0
+        #mp_receiver_z1 = mp_receiver.time.value
+
+        throttle_output = controller.set_value(throttle_value, mode='throt')
+        steering_output = controller.set_value(steering_value, mode='steer')
+        
+        print('Time diff: {}, Throttle: {}, Steering: {}'.format(time_diff, throttle_output, steering_output))
         time.sleep(0.01)
 
     controller.shutdown()
