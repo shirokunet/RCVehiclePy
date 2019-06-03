@@ -11,7 +11,7 @@ from pynput import keyboard
 
 
 class MQTTSender():
-    def __init__(self, host='10.0.0.88', port=1883, keepalive=60):
+    def __init__(self, host='localhost', port=1883, keepalive=60):
         self._client = mqtt.Client()
         self._client.connect(host, port, keepalive)
         return
@@ -27,9 +27,9 @@ class MQTTSender():
 
 class MPDriverInput():
     def __init__(self):
-        self.throttle = Value(ctypes.c_float,0.0)
-        self.steering = Value(ctypes.c_float,0.0)
-        self.is_run = Value(ctypes.c_bool,True)
+        self.throttle = Value(ctypes.c_float, 0.0)
+        self.steering = Value(ctypes.c_float, 0.0)
+        self.is_run = Value(ctypes.c_bool, True)
 
         self._p = Process(target=self._process, args=())
         self._p.start()
@@ -75,16 +75,18 @@ def main():
     mp_driver = MPDriverInput()
 
     driver_msg = {
+        'time': time.time(),
         'throttle': 0.0,
         'steering': 0.0
     }
 
     print('Press esc to exit:')
     while mp_driver.is_run.value:
+        driver_msg['time'] = int(time.time())
         driver_msg['throttle'] = mp_driver.throttle.value
         driver_msg['steering'] = mp_driver.steering.value
         sender.publish(json.dumps(driver_msg))
-        print('Throttle: {}, Steering: {}'.format(driver_msg['throttle'], driver_msg['steering']))
+        print('Time:{}, Throttle: {}, Steering: {}'.format(driver_msg['time'], driver_msg['throttle'], driver_msg['steering']))
         time.sleep(0.01)
 
     mp_driver.close()

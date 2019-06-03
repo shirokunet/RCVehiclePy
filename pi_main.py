@@ -12,7 +12,7 @@ from parts.actuator import PCA9685, PWMSteering, PWMThrottle
 
 
 class MPMQTTReceiver():
-    def __init__(self, host='10.0.0.88', port=1883, keepalive=60):
+    def __init__(self, host='localhost', port=1883, keepalive=60):
         self.time = Value(ctypes.c_int, 0)
         self.throttle = Value(ctypes.c_float, 0.0)
         self.steering = Value(ctypes.c_float, 0.0)
@@ -84,22 +84,19 @@ def main():
     mp_receiver = MPMQTTReceiver(host=cfg['pi_ip'])
     controller = RCController()
 
-    #mp_receiver_z1 = 0
-
     while True:
         throttle_value = mp_receiver.throttle.value
         steering_value = mp_receiver.steering.value
-        
-        time_diff =  abs(mp_receiver.time.value - time.time())
-        if time_diff >= 2:
+
+        time_diff_sec = abs(mp_receiver.time.value - time.time())
+        if time_diff_sec > 1.0:
             throttle_value = 0
             steering_value = 0
-        #mp_receiver_z1 = mp_receiver.time.value
 
         throttle_output = controller.set_value(throttle_value, mode='throt')
         steering_output = controller.set_value(steering_value, mode='steer')
-        
-        print('Time diff: {}, Throttle: {}, Steering: {}'.format(time_diff, throttle_output, steering_output))
+
+        print('Time diff: {}, Throttle: {}, Steering: {}'.format(time_diff_sec, throttle_output, steering_output))
         time.sleep(0.01)
 
     controller.shutdown()
