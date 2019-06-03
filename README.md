@@ -17,7 +17,7 @@ This is a Tool to Control steering and throttle of a R/C car using via MQTT with
 - You can read my simple instruction at [here](https://shiroku.net/robotics/raspberry-pi-3b-setup/).
 
 ### Build a car
-<img src="https://raw.githubusercontent.com/wiki/shirokunet/RCVehiclePy/images/overview.jpg" width="672" height="504">
+<img src="https://raw.githubusercontent.com/wiki/shirokunet/RCVehiclePy/images/overview.jpg" width="672">
 
 - Hardware is almost same as a [Donkey Car](http://docs.donkeycar.com/guide/build_hardware/).
 - I bought below parts. The cost is about $130.
