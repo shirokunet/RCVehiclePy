@@ -3,6 +3,6 @@ Adafruit-PCA9685==1.0.1
 Adafruit-PureIO==0.2.3
 paho-mqtt==1.4.0
 pynput==1.4.2
-pytest==4.6.0
+pytest==9.0.3
 python-xlib==0.25
 xlib==0.21
